@@ -1,0 +1,30 @@
+<!-- The form for adding a new comment to the forum -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>New Comment</title>
+	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+	{{> header}}
+
+	<main class="content">
+		<h2>Add Comment</h2><br>
+		<p>The is the form to add a comment to the forum!</p><br>
+		
+		<!-- Throw an error if parts of the comment form are invalid -->
+		{{#if error}}
+			<p class="error-message">Invalid Comment Form Submission!</p>
+		{{/if}}
+
+		<!-- The new comment form -->
+		<form method="POST" action="/comment" class="form-comment">
+			<textarea name="text" rows="10" cols="80" required placeholder="Write your comment..."></textarea>
+			<br><br>
+			<button type="submit">Submit</button>
+		</form>
+	</main>
+
+	{{> footer}}
+</body>
+</html>

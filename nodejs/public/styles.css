@@ -1,0 +1,208 @@
+/* ---------- INITIAL FORMATTING ----------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- GENERAL PAGE LAYOUT ---------- */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f7f3;
+  color: #2f1b0c;
+}
+
+/* ---------- HEADER ---------- */
+
+header {
+  background-color: #deb887;
+  color: #2f1b0c;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+header h1 {
+  margin-bottom: 1.5rem;
+}
+
+header nav a {
+  margin: 0 0.75rem;
+  color: #2f1b0c;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Makes logout button look like a link */
+.logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.link-button {
+    background: none !important;
+    border: none;
+    color: #2f1b0c;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 0;
+    margin: 0 0.75rem;
+    font-weight: bold;
+}
+
+.link-button:hover {
+    text-decoration: underline;
+}
+
+/* ---------- HOME PAGE INFORMATION/CONTENT -------- */
+
+.home-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.home-container section {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.home-container h2, 
+.home-container h3 {
+  color: #333;
+}
+
+.home-container p, 
+.home-container li {
+  line-height: 1.6;
+  color: #555;
+}
+
+.home-container ul {
+  list-style-type: disc;
+  padding-left: 2rem;
+}
+
+.home-img {
+  display: block;
+  width: 80%;
+  max-width: 600px;
+  margin: 1.5rem auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ---------- MAIN CONTENT ---------- */
+
+main.content {
+  flex: 1;
+  padding: 2.5rem;
+  /*max-width: 900px;*/
+  margin: 0 auto;
+  width: 100%;
+  text-align: center; /* centers most child text */
+}
+
+/* ---------- FOOTER ---------- */
+
+footer.site-footer {
+  background-color: #deb887;
+  color: #2f1b0c;
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: auto;
+  width: 100%;
+  border-top: 1px solid #b8860b;
+  font-size: 0.9em;
+}
+
+/* ---------- FORMS ---------- */
+
+.form-auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* centers the form content horizontally */
+  justify-content: center;
+  max-width: 350px;
+  margin: 2.5rem auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-auth label {
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.form-auth input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-auth button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* ---------- COMMENTS ---------- */
+
+ul.comment-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+li.comment-item {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  margin: 1rem auto;
+  text-align: left;
+}
+
+.comment-item .timestamp {
+  font-size: 0.8em;
+  color: #666;
+}
+
+/* ---------- BUTTONS ---------- */
+
+button {
+  background-color: #8b4513;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a0522d;
+}

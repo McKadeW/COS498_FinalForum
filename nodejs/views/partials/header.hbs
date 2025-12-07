@@ -1,0 +1,27 @@
+<!-- Header/Nav component that will display content on all pages -->
+<header class="site-header">
+	<h1>Wild West Forum</h1>
+
+	<!-- Nav bar linking component -->
+	<nav class="navbar">
+		<a href="/">Home</a>
+
+		<!-- Verify that the user is logged in -->
+		<!-- If they are, they get the actions to view + add comments and logout -->
+		{{#if loggedIn}}
+			<!-- Display comments page and and form to add a new comment -->
+			<a href="/comments">Comments</a>
+			<a href="/comment/new">Add New Comment</a>
+
+			<!-- Button to let the user logout -->
+			<form action="/logout" method="POST" class="logout-form">
+				<button type="submit" class="link-button">Logout</button>
+			</form>
+
+		<!-- Otherwise, they can register or login -->
+		{{else}}
+			<a href="/register">Register</a>
+			<a href="/login">Login</a>
+		{{/if}}
+  	</nav>
+</header>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+	{{> header}}
+
+  		<main class="home-container">
+    			<section class="intro">
+      				<h2>Welcome {{user}} to the Wild West Forum!</h2><br>
+      				<p>
+        			The <strong>Wild West Forum</strong> is a lightweight web application created for 
+        			<em>COS498: Server-Side Web Development</em>. This project demonstrates 
+        			the use of Node.js, Express, Handlebars, and Docker to build a small 
+        			but functional forum system where users can register, log in, and post comments.
+      				</p>
+    			</section>
+
+    			<section class="features">
+      				<h3>Project Features</h3>
+      				<ul>
+        				<li>User registration and login system (with basic session handling)</li>
+        				<li>View and add comments on the forum</li>
+        				<li>Dynamic pages rendered with Handlebars templates</li>
+        				<li>Dockerized setup for Node.js and Nginx</li>
+      				</ul>
+    			</section>
+
+    			<section class="architecture">
+      				<h3>System Architecture</h3>
+      				<p>
+        			This project runs on a <strong>Node.js</strong> backend using the 
+        			<strong>Express.js</strong> framework for routing and <strong>Handlebars</strong> 
+        			for server-side templating. The application is deployed inside Docker containers, 
+        			with <strong>Nginx</strong> acting as a reverse proxy.
+      				</p>
+      				<img src="/images/nodejs.jpg" alt="System architecture diagram" class="home-img">
+    			</section>
+
+    			<section class="about">
+      				<h3>About the Assignment</h3>
+      				<p>
+        			This project is intentionally designed with simplified security and in-memory data 
+        			storage for educational purposes. It demonstrates fundamental concepts of 
+        			session management, routing, and templating in a controlled, sandboxed environment.
+      				</p>
+    			</section>
+  		</main>
+
+	{{> footer}}
+</body>
+</html>
+

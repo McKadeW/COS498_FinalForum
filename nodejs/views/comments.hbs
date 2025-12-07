@@ -1,0 +1,35 @@
+<!-- Comments page that will display the main forum content -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+	{{> header}}
+
+	<!-- Main section that will display the list of posted comments (if any) -->
+	<main class="content">
+		<h2>Posted Comments</h2>
+
+		<!-- If there are comments, display them -->
+		{{#if comments.length}}
+			<br><br>
+			<ul class="comment-list">
+				{{#each comments}}
+					<li class="comment-item">
+						<strong>{{author}}</strong>
+						<span class="timestamp">{{createdAt}}</span><br>
+						<p class="comment-text">{{text}}</p>
+					</li>
+				{{/each}}
+			</ul>
+		{{else}}
+			<br>
+			<p>No Comments Yet! Be the first to make a post!</p>
+		{{/if}}
+	</main>
+
+	{{> footer}}
+</body>
+</html>
