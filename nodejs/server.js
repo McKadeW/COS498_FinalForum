@@ -3,8 +3,10 @@ const hbs = require('hbs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const SQLiteStore = require('./sqlite-session-store');
 const argon2 = require('argon2');
-const { db } = require('./db');
+const db = require('./db');
+const { validatePassword, hashPassword, comparePassword } = require('./modules/password-utils');
 const app = express();
 const PORT = process.env.PORT || 3012;
 
@@ -21,14 +23,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
 
-// System "in-memory" data
-// Array of objects { username: string, password: string }
-//const users = [];
-// Array of objects { author: string, text: string, createdAt: Date }
-//const comments = [];
+// Session configuration with SQLite store
+const sessionStore = new SQLiteStore({
+  db: path.join(__dirname, 'sessions.db'),
+  table: 'sessions'
+});
 
 // Session Middleware
 app.use(session({
+  store: sessionStore,
   secret: 'Wild-West-Forum-Secret',
   resave: false,
   saveUninitialized: false,
@@ -68,21 +71,42 @@ app.get('/register', (req, res) => {
 
 // Resgistration form
 app.post('/register', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  try {
+    const username = req.body.username;
+    const password = req.body.password;
   
-  // Verify a unique username
-  for (let i = 0; i < users.length; i++){
-	if (username === users[i].username){
-	  return res.redirect('/register?error=1');
-	}
-  }
+    if (!username || !password) {
+      return res.redirect('/register?error=1');
+    }
 
-  // If not taken add the user info to the DB
-  // and redirect to the login page
-  users.push({username, password});
-  return res.redirect('/login');
-  
+    // Validate password requirements
+    const validation = validatePassword(password);
+    if (!validation.valid) {
+      return res.redirect('/register?error=1'); // WILL NEED TO REPLACE WITH SPECIFIC ERRORS
+    }
+
+    // Check if the username exists in db
+    const existingUser = db.prepare(`SELECT id FROM users WHERE username = ?`).get(username);
+    if (existingUser) {
+      return res.redirect('/register?error=1'); //SPECIFIC ERRORS
+    }
+
+    // Hash the password before storing
+    const passwordHash = await hashPassword(password);
+
+    // Add new user into database
+    const stmt = db.prepare(`
+      INSERT INTO users (username, password_hash, email, display_name, profile_customization)
+      VALUES (?, ?, NULL, NULL, '{}')
+    `);
+    const result = stmt.run(username, passwordHash);
+
+    return res.redirect('/login');
+
+  } catch (error) {
+    console.error('Registration Error:', error);
+    return res.redirect('/register?error=1'); //NEW ERRORS NEEDED
+  }
 });
 
 // Login page
@@ -95,32 +119,43 @@ app.get('/login', (req, res) => {
 
 // Login form
 app.post('/login', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  try { 
+    const username = req.body.username;
+    const password = req.body.password;
+    
+    // Validate Login input
+    if (!username || !password) {
+      return res.redirect('/login?error=1'); //FIX ERRORS
+    }
 
-  // Simple authentication
-  if (username && password) {
-	let userFound = 0;
-	// Verify that the user has an account
-	for (let i = 0; i < users.length; i++){
-        	if (username === users[i].username && password === users[i].password){
-          		userFound = 1;
-			// Set session data
-        		req.session.isLoggedIn = true;
-        		req.session.username = username;
-        		return res.redirect('/');
-        	}
-	}
+    // Find user by username
+    const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+    
+    if (!user) {
+      return res.redirect('/login?error=1'); //FIX
+    }
 
-	// If the user info isn't found, they don't have 
-	// an account. Redirect back to login page with error.
-	if (!userFound){
-		return res.redirect('/login?error=1');	
-	}
-  }
-  // If the user didn't enter username and password, error
-  else {
-	return res.redirect('/login?error=1');
+    // Compare entered password with stored hash
+    const passwordMatch = await comparePassword(password, user.password_hash);
+
+    if (!passwordMatch) {
+      return res.redirect('/login?error=1'); //FIX
+    }
+
+    // Successful login - update last login time
+    db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
+    
+    // Create session
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    req.session.isLoggedIn = true;
+    
+    // Redirect to success page
+    return res.redirect('/');
+
+  } catch (error) {
+    console.error('Login Error:', error);
+    return res.redirect('/login?error=1'); //FIX
   }
 });
 
@@ -196,5 +231,12 @@ app.post('/comment', (req, res) => {
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+// Graceful shutdown, this will help the session to close the db gracefully since we're now using it.
+process.on('SIGINT', () => {
+  console.log('\nShutting down gracefully...');
+  sessionStore.close();
+  process.exit(0);
 });
 

@@ -4,16 +4,14 @@ const Database = require('better-sqlite3');
 const path = require('path');
 
 // Connect to database file
-const dataDir = path.join(__dirname, 'database');
-const dbPath = path.join(dataDir, 'forum.db');
+const dbPath = path.join(__dirname, 'app.db');
 const db = new Database(dbPath);
 
-// Create tables if they don't exist
-// Create a foreign key to connect the users to the
-// comments that they create
-db.exec(`
-  PRAGMA foreign_keys = ON;
+// Enable foreign keys
+db.pragma('foreign_keys = ON');
 
+// Create tables if they don't exist
+db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
