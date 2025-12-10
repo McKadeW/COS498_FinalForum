@@ -1,7 +1,6 @@
 const express = require('express');
 const hbs = require('hbs');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const SQLiteStore = require('./sqlite-session-store');
 const argon2 = require('argon2');
@@ -20,7 +19,6 @@ hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
 app.use(express.static('public'));
 
 // Session configuration with SQLite store
@@ -96,8 +94,8 @@ app.post('/register', async (req, res) => {
 
     // Add new user into database
     const stmt = db.prepare(`
-      INSERT INTO users (username, password_hash, email, display_name, profile_customization)
-      VALUES (?, ?, NULL, NULL, '{}')
+      INSERT INTO users (username, password_hash, email, profile_data)
+      VALUES (?, ?, NULL, '{}')
     `);
     const result = stmt.run(username, passwordHash);
 
@@ -118,7 +116,7 @@ app.get('/login', (req, res) => {
 });
 
 // Login form
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   try { 
     const username = req.body.username;
     const password = req.body.password;

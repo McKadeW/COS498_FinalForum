@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:24
 
 # Set working directory
 WORKDIR /app
@@ -11,9 +11,6 @@ RUN npm install
 
 # Copy source code
 COPY . .
-
-# Static file copying for nginx to proxy traffic to
-#COPY public/ ./public
 
 # Expose port (internal to container network)
 EXPOSE 3012

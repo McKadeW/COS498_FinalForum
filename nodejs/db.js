@@ -16,13 +16,12 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME,
-    display_name TEXT,
-    profile_color TEXT,
+    profile_data TEXT,
     failed_login_attemps INTEGER DEFAULT 0,
-    locked_until INTEGER DEFAULT 0,
+    locked_until INTEGER DEFAULT 0
   );
 
   CREATE TABLE IF NOT EXISTS sessions (
