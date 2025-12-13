@@ -173,6 +173,11 @@ app.get('/comments', (req, res) => {
   // Display the page and all currently posted comments
   // Only shows if the user is logged in
   if (req.session && req.session.isLoggedIn) {
+	const comments = db.prepare(`
+    	  SELECT comments.text, comments.created_at, users.username
+    	  FROM comments JOIN users ON comments.user_id = users.id
+  	`).all();
+
 	return res.render('comments', {
     		title: 'Comments',
     		comments: comments,
@@ -208,7 +213,7 @@ app.post('/comment', (req, res) => {
   }
   
   // Verfiy that the form was properly filled out/valid
-  const author = req.session.username;
+  const author = req.session.userId;
   const text = req.body.text.toString();
   
   // If invalid, redirect to the form
@@ -216,12 +221,11 @@ app.post('/comment', (req, res) => {
 	return res.redirect('/comment/new?error=1');
   }
   else {
-	// Add the new comment to memory
-	comments.push({
-		author: req.session.username,
-		text: req.body.text.toString(),
-		createdAt: new Date().toLocaleString()
-	});
+	// Add the new comment to database
+	db.prepare(`
+	  INSERT INTO comments (user_id, text) VALUES (?, ?)	
+	`).run(author, text);
+	
   	return res.redirect('/comments');
   }
 });
