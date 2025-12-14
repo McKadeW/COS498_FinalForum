@@ -1,0 +1,60 @@
+<!-- This is the user's profile page. Here, they will be able to update their account info -->
+<!-- This includes their password, email, and display name, as well as customization specific to their profile-->
+<!DOCTYPE html>
+<html>
+<head>
+        <title>Profile</title>
+        <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+        {{> header}}
+
+        <main class="content">
+                <h2>Profile</h2><br>
+                <p>Update account information and customize your profile.</p><br>
+
+                <!-- If the user tries to change account infor but fails validation checks, show error -->
+                {{#if error}}
+                        <p class="error-message">{{error}}</p>
+                {{/if}}
+
+		<h3>Change Password</h3>
+                <!-- The form allowing the user to update their password -->
+                <form method="POST" action="/profile/changePassword" class="form-auth">
+                        <label>Current Password:</label>
+                        <input type="text" name="old_password" required>
+                        <label>New Password:</label>
+                        <input type="text" name="new_password" required>
+                        <br>
+                        <button type="submit">Submit</button>
+			<p><strong>Note: </strong>You will be logged out after changing your password.</p>
+                </form>
+
+		<h3>Change Email</h3>
+		<!-- The form allowing the user to update their email -->
+                <form method="POST" action="/profile/changeEmail" class="form-auth">
+                        <label>Current Password:</label>
+                        <input type="text" name="new_password" required>
+                        <label>New Email:</label>
+                        <input type="text" name="new_email" required>
+                        <br>
+                        <button type="submit">Submit</button>
+                </form>
+
+		<h3>Change Display Name</h3>
+                <!-- The form allowing the user to update their display name -->
+                <form method="POST" action="/profile/changeDisplayName" class="form-auth">
+                        <label>New Display Name:</label>
+                        <input type="text" name="new_display_name" required>
+                        <br>
+                        <button type="submit">Submit</button>
+                </form>
+
+		<h3>Profile Customization</h3>
+		<!-- The section where users can update their display name color -->
+		<p>TEMPORARY TEXT FOR CHANGING DISPLAY NAME COLOR</p>
+        </main>
+
+        {{> footer}}
+</body>
+</html>

@@ -1,5 +1,4 @@
-// This is the routes file containing page routes
-// The main page route is for the server root, home
+// This is the routes file containing page routes like home and profile pages
 
 const express = require('express');
 const router = express.Router();
@@ -20,6 +19,21 @@ router.get('/', (req, res) => {
         loggedIn: req.session.isLoggedIn,
         user: user
   });
+});
+
+// Profile page
+router.get('/profile', (req, res) => {
+  // Only show profile page if the user is logged in
+  if (req.session && req.session.isLoggedIn) {
+      return res.render('profile', {
+          title: 'Profile',
+	  loggedIn: req.session.isLoggedIn,
+          error: req.query.error
+      });
+  }
+  else {
+      return res.render('login');
+  }
 });
 
 module.exports = router;
