@@ -55,7 +55,7 @@ router.post('/comment', (req, res) => {
 
   // If invalid, redirect to the form
   if (!author || !text) {
-        return res.redirect('/comment/new?error=1');
+        return res.redirect('/comment/new?error=' + encodeURIComponent('Comments must have text content.'));
   }
   else {
         // Add the new comment to database

@@ -14,7 +14,7 @@
 
 		<!-- If the user tries to register a username that exists, show error -->
 		{{#if error}}
-			<p class="error-message">That username is already taken. You must choose another!</p>
+			<p class="error-message">{{error}}</p>
 		{{/if}}
 
 		<!-- The form allowing the user to create their username and password -->

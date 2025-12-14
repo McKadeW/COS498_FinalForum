@@ -11,6 +11,10 @@ const db = new Database(dbPath);
 db.pragma('foreign_keys = ON');
 
 // Create tables if they don't exist
+// Table 1: Holds the user's account and profile info
+// Table 2: Holds the user's session information
+// Table 3: Holds the comments ties to each user
+// Table 4: Tracks login attempts based on IP and username
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,11 +48,17 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS login_attempts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT,
-    ip TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    success INTEGER NOT NULL
+    ip_address TEXT NOT NULL,
+    username TEXT NOT NULL,
+    attempt_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    success INTEGER DEFAULT 0
   );
+`);
+
+// Create index for faster lookups on IP address and username combination
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_username
+  ON login_attempts(ip_address, username, attempt_time)
 `);
 
 module.exports = db;

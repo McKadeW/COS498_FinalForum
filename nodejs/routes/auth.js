@@ -2,9 +2,12 @@
 // login, logout, and register
 
 const express = require('express');
-const argon2 = require('argon2');
+//const argon2 = require('argon2');
 const db = require('../db');
 const { validatePassword, hashPassword, comparePassword } = require('../modules/password-utils');
+const { validateEmail } = require('../modules/email-utils');
+const loginTracker = require('../modules/login-tracker');
+const { checkLoginLockout, getClientIP } = require('../modules/auth-middleware');
 const router = express.Router();
 
 // Registration page
@@ -24,30 +27,38 @@ router.post('/register', async (req, res) => {
     const email = req.body.email;
 
     if (!username || !password || !display_name || !email) {
-      return res.redirect('/register?error=1');
+      return res.redirect('/register?error=' + encodeURIComponent('Username, password, email, and display name are required'));
     }
 
     // Validate password requirements
-    const validation = validatePassword(password);
-    if (!validation.valid) {
-      return res.redirect('/register?error=1'); // WILL NEED TO REPLACE WITH SPECIFIC ERRORS
+    const validPass = validatePassword(password);
+    if (!validPass.valid) {
+      const errorsText = validPass.errors.join(', ');
+      return res.redirect('/register?error=' + encodeURIComponent('Password does not meet requirements: ' + errorsText));
+    }
+
+    // Validate email requirements
+    const validEmail = validateEmail(email);
+    if (!validEmail.valid) { 
+      const errorsText = validEmail.errors.join(', ');
+      return res.redirect('/register?error=' + encodeURIComponent('Email does not meet requirements: ' + errorsText));
     }
 
     // Check if the username exists in db
     const existingUser = db.prepare(`SELECT id FROM users WHERE username = ?`).get(username);
     if (existingUser) {
-      return res.redirect('/register?error=1'); //SPECIFIC ERRORS
+      return res.redirect('/register?error=' + encodeURIComponent('Username already exists. Please choose a different username.'));
     }
 
     // Check if the email exists in db
     const existingEmail = db.prepare(`SELECT id FROM users WHERE email = ?`).get(email);
     if (existingEmail) {
-      return res.redirect('/register?error=1'); //SPECIFIC ERRORS
+      return res.redirect('/register?error=' + encodeURIComponent('Email already exists. Please choose a different email.'));
     }
 
     // Ensure the display name is different from their username
     if (username === display_name) {
-	return res.redirect('/register?error=1'); //SPECIFIC ERRORS
+	return res.redirect('/register?error=' + encodeURIComponent('Display name must be different than username.'));
     }
 
     // Hash the password before storing
@@ -62,8 +73,8 @@ router.post('/register', async (req, res) => {
     return res.redirect('/login');
 
   } catch (error) {
-    console.error('Registration Error:', error);
-    return res.redirect('/register?error=1'); //NEW ERRORS NEEDED
+    const caughtErr = 'Registration Error:' + error;
+    return res.redirect('/register?error=' + encodeURIComponent(caughtErr));
   }
 });
 
@@ -76,31 +87,43 @@ router.get('/login', (req, res) => {
 });
 
 // Login form
-router.post('/login', async (req, res) => {
+router.post('/login', checkLoginLockout, async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
+    const ipAddress = getClientIP(req);
 
     // Validate Login input
     if (!username || !password) {
-      return res.redirect('/login?error=1'); //FIX ERRORS
+      // Record failed attempt if username is provided
+      if (username) {
+        loginTracker.recordAttempt(ipAddress, username, false);
+      }
+      return res.redirect('/login?error=' + encodeURIComponent('Username and password are required'));
     }
 
     // Find user by username
     const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
 
     if (!user) {
-      return res.redirect('/login?error=1'); //FIX
+      // Record failed attempt (user doesn't exist)
+      loginTracker.recordAttempt(ipAddress, username, false);
+      return res.redirect('/login?error=' + encodeURIComponent('Invalid username or password'));
     }
 
     // Compare entered password with stored hash
     const passwordMatch = await comparePassword(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.redirect('/login?error=1'); //FIX
+      // Record failed attempt (wrong password)
+      loginTracker.recordAttempt(ipAddress, username, false);
+      return res.redirect('/login?error=' + encodeURIComponent('Invalid username or password'));
     }
 
-    // Successful login - update last login time
+    // Successful Login
+    loginTracker.recordAttempt(ipAddress, username, true);
+
+    // Update last login time
     db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
 
     // Create session
@@ -113,8 +136,8 @@ router.post('/login', async (req, res) => {
     return res.redirect('/');
 
   } catch (error) {
-    console.error('Login Error:', error);
-    return res.redirect('/login?error=1'); //FIX
+    const caughtErr = 'Login Error:' + error;
+    return res.redirect('/login?error=' + encodeURIComponent(caughtErr));
   }
 });
 
