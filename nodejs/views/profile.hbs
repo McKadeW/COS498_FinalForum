@@ -10,7 +10,8 @@
         {{> header}}
 
         <main class="content">
-                <h2>Profile</h2><br>
+ 		<!-- Show the user's display name, not username and colorize it to match profile settings -->
+                <h2><span style="color: {{color}}">{{display_name}}'s</span> Profile</h2><br>
                 <p>Update account information and customize your profile.</p><br>
 
                 <!-- If the user tries to change account infor but fails validation checks, show error -->
@@ -22,9 +23,9 @@
                 <!-- The form allowing the user to update their password -->
                 <form method="POST" action="/profile/changePassword" class="form-auth">
                         <label>Current Password:</label>
-                        <input type="text" name="old_password" required>
+                        <input type="password" name="old_password" required>
                         <label>New Password:</label>
-                        <input type="text" name="new_password" required>
+                        <input type="password" name="new_password" required>
                         <br>
                         <button type="submit">Submit</button>
 			<p><strong>Note: </strong>You will be logged out after changing your password.</p>
@@ -34,7 +35,7 @@
 		<!-- The form allowing the user to update their email -->
                 <form method="POST" action="/profile/changeEmail" class="form-auth">
                         <label>Current Password:</label>
-                        <input type="text" name="new_password" required>
+                        <input type="password" name="password" required>
                         <label>New Email:</label>
                         <input type="text" name="new_email" required>
                         <br>
@@ -52,7 +53,12 @@
 
 		<h3>Profile Customization</h3>
 		<!-- The section where users can update their display name color -->
-		<p>TEMPORARY TEXT FOR CHANGING DISPLAY NAME COLOR</p>
+		<form method="POST" action="/profile/customize" class="form-auth">
+                        <label>Colorize Display Name with Hex:</label>
+                        <input type="text" name="color" required>
+                        <br>
+                        <button type="submit">Submit</button>
+                </form>
         </main>
 
         {{> footer}}

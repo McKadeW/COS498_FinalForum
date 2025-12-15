@@ -11,7 +11,7 @@ router.get('/comments', (req, res) => {
   // Only shows if the user is logged in
   if (req.session && req.session.isLoggedIn) {
         const comments = db.prepare(`
-          SELECT comments.text, comments.created_at, users.display_name
+          SELECT comments.text, comments.created_at, users.display_name, users.profile_data
           FROM comments JOIN users ON comments.user_id = users.id
         `).all();
 

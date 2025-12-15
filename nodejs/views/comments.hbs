@@ -18,8 +18,9 @@
 			<ul class="comment-list">
 				{{#each comments}}
 					<li class="comment-item">
-						<strong>{{display_name}}</strong>
-						<span class="timestamp">{{created_at}}</span><br>
+						<!-- Display the users display name, not username and color it to match profile settings -->
+						<p><strong style="color: {{profile_data}}">{{display_name}}</strong></p>
+						<p><span class="timestamp">{{created_at}}</span></p><br>
 						<p class="comment-text">{{text}}</p>
 					</li>
 				{{/each}}

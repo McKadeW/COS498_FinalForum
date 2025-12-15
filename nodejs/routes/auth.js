@@ -67,7 +67,7 @@ router.post('/register', async (req, res) => {
     // Add new user into database
     db.prepare(`
       INSERT INTO users (username, password_hash, email, display_name, profile_data)
-      VALUES (?, ?, ?, ?, '{}')
+      VALUES (?, ?, ?, ?, NULL)
     `).run(username, passwordHash, email, display_name);
 
     return res.redirect('/login');
@@ -130,6 +130,7 @@ router.post('/login', checkLoginLockout, async (req, res) => {
     req.session.userId = user.id;
     req.session.username = user.username;
     req.session.display_name = user.display_name;
+    req.session.color = user.color;
     req.session.isLoggedIn = true;
 
     // Redirect to success page
