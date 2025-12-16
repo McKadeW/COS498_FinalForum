@@ -6,12 +6,29 @@ const hbs = require('hbs');
 const path = require('path');
 const session = require('express-session');
 const SQLiteStore = require('./sqlite-session-store');
+const http = require('http');
+const db = require('./db');
+const { Server } = require('socket.io');
+
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3012;
 
 const authRouter = require('./routes/auth');
 const commentRouter = require('./routes/comments');
 const pageRouter = require('./routes/pages');
+const liveChatRouter = require('./routes/live_chat');
+
+// Socket.IO setup
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+// Allow the /liveChat/send POST route handle broadcasts
+// Source: https://github.com/socketio/socket.io/discussions/4157
+app.set('io', io);
 
 // Configure Handlebars
 app.set('view engine', 'hbs');
@@ -32,7 +49,7 @@ const sessionStore = new SQLiteStore({
 });
 
 // Session Middleware
-app.use(session({
+const sessionMiddleware = session({
   store: sessionStore,
   secret: 'Wild-West-Forum-Secret',
   resave: false,
@@ -41,15 +58,37 @@ app.use(session({
     secure: false,
     maxAge: 1000 * 60 * 60
   }
-}));
+});
+app.use(sessionMiddleware);
 
 // Routes ------------------------------
 app.use('/', pageRouter);
 app.use('/', authRouter);
 app.use('/', commentRouter);
+app.use('/', liveChatRouter);
+
+// Share the session with Socket.IO
+io.engine.use(sessionMiddleware);
+
+// Socket.IO event handlers
+// Broadcasting a message to all users can be found in ./routes/live_chat.js
+io.on('connection', (socket) => {
+  const session = socket.request.session;
+    
+  // Check if user is authenticated
+  if (!session.isLoggedIn) {
+    socket.disconnect();
+    return;
+  }
+    
+  // Send welcome message once connected
+  socket.emit('connected', {
+    message: `Welcome ${session.display_name}!`,
+  });
+});
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 

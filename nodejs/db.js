@@ -15,6 +15,7 @@ db.pragma('foreign_keys = ON');
 // Table 2: Holds the user's session information
 // Table 3: Holds the comments ties to each user
 // Table 4: Tracks login attempts based on IP and username
+// Table 5: Holds the live chat history, similar to comments
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,6 +53,14 @@ db.exec(`
     username TEXT NOT NULL,
     attempt_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     success INTEGER DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id)
   );
 `);
 

@@ -2,12 +2,12 @@
 // login, logout, and register
 
 const express = require('express');
-//const argon2 = require('argon2');
 const db = require('../db');
 const { validatePassword, hashPassword, comparePassword } = require('../modules/password-utils');
 const { validateEmail } = require('../modules/email-utils');
 const loginTracker = require('../modules/login-tracker');
 const { checkLoginLockout, getClientIP } = require('../modules/auth-middleware');
+//const { sendEmail } = require('../modules/sendEmails');
 const router = express.Router();
 
 // Registration page
@@ -141,6 +141,44 @@ router.post('/login', checkLoginLockout, async (req, res) => {
     return res.redirect('/login?error=' + encodeURIComponent(caughtErr));
   }
 });
+
+// Route that shows the form to reset the user password
+/*router.get('/login/forgotPassword', (req, res) => {
+  return res.render('forgot_password', {
+    error: req.query.error
+  });
+});
+
+// The logic for sending an email to the user to reset their password
+router.post('/login/forgotPassword', async (req, res) => {
+  try {
+    const email = req.body.email;
+
+    // Don't accept empty form input, without email
+    if (!email) {
+      return res.redirect('/login/forgotPassword?error=' + encodeURIComponent('Email required to reset password.'));
+    }
+
+    // Check to see if the user entered their email
+    const user = db.prepare(`SELECT id FROM users WHERE email = ?`).get(email);
+
+    // If the user's email is correct, send them an email
+    if (user) {
+      const send = await sendEmail(email, `CardIndex Password Reset for ${user.username}`, "Reset password!");
+    }
+
+    // Check to see if the email sent properly
+    if (!send) {
+      const errorsText = send.errors.join(', ');
+      return res.redirect('/login/forgotPassword?error=' + encodeURIComponent('Email failed to send: ' + errorsText));
+    }
+
+    return res.redirect('/login');
+  }
+  catch (error) {
+    return res.redirect('/login/forgotPassword?error=' + encodeURIComponent("Error sending email."));
+  }
+});*/
 
 // Logout action
 router.post('/logout', (req, res) => {

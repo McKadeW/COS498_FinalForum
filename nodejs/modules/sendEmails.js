@@ -24,7 +24,14 @@ const transporter = nodemailer.createTransport({
 
 // Function to send a plain text email
 async function sendEmail(to, subject, text) {
-    try {
+  try {
+	const errors = [];
+
+	// Validate the inputs
+	if (!to || !subject || !text) {
+          errors.push("Missing form inputs.");
+	}
+
         const info = await transporter.sendMail({
             from: process.env.GMAIL_USER,  // Sender address
             to: to,                         // Recipient address
@@ -32,14 +39,14 @@ async function sendEmail(to, subject, text) {
             text: text                     // Plain text body
         });
         
-        console.log('Email sent successfully:', info.messageId);
-        return { success: true, messageId: info.messageId };
     } catch (error) {
-        console.error('Error sending email:', error);
-        return { success: false, error: error.message };
+        errors.push("Failed to send email.");
+    }
+    return {
+      valid: errors.length === 0,
+      errors
     }
 }
-
 
 module.exports = {
     sendEmail

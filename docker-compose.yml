@@ -7,8 +7,6 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3012
-    env_file:
-      - ./nodejs/.env
     # No ports exposed - only nginx can access this container
     networks:
       - app-network
