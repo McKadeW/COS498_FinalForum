@@ -11,7 +11,7 @@ const db = new Database(dbPath);
 db.pragma('foreign_keys = ON');
 
 // Create tables if they don't exist
-// Table 1: Holds the user's account and profile info
+// Table 1: Holds the user's account, profile info, and account recovery question/answer
 // Table 2: Holds the user's session information
 // Table 3: Holds the comments with ties to each user
 // Table 4: Tracks login attempts based on IP and username
@@ -23,6 +23,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    recovery_question TEXT NOT NULL,
+    recovery_answer TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME,

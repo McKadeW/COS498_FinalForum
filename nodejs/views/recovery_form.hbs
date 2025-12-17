@@ -1,0 +1,46 @@
+<!-- A page that allows users to answer their provided security question to reset their password -->
+<!DOCTYPE html>
+<html>
+<head>
+  	<title>Account Recovery</title>
+  	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  	{{> header}}
+
+	<!-- The main content page for user's to answer their account recovery question -->
+  	<main class="content">
+    		<h2>Account Recovery</h2><br>
+		<p>Answer your recovery question and enter a new password.</p>
+
+		<!-- Output any errors, like incorrect answers -->
+    		{{#if error}}
+      			<p class="error-message">{{error}}</p>
+    		{{/if}}
+
+		<!-- A form that allows the user to answer their account recovery question -->
+		<!-- and a new password. If the answer is correct, their password will become the new one -->
+    		<form method="POST" action="/login/forgotPassword/verify" class="form-auth">
+      			<!-- The user's recovery question (created during registration) -->
+                	{{#if question}}
+                        	<p><strong>{{question}}</strong></p>
+                	{{/if}}
+			
+			<br>
+			<!-- Hidden input that passes the user ID to other routes -->
+			<input type="hidden" name="id" value="{{id}}">
+      			<label>Answer:</label>
+      			<input type="text" name="answer" required>
+      			<label>New Password:</label>
+      			<input type="password" name="password" required>
+			<br>
+      			<button type="submit">Reset Password</button>
+    		</form>
+
+		<!-- When complete, the user can return to the login page -->
+    		<p><a href="/login">Back to login</a></p>
+  	</main>
+
+  	{{> footer}}
+</body>
+</html>

@@ -43,11 +43,13 @@ router.get('/comments', (req, res) => {
     // (e.g. Page 4 is selected, 20 comments/page, we want to load comments 60-80)
     const start_point = page_num * num_comments_page - 20;
 
-    // This will order the comments as most recent at the top
-    // It will fetch all comment data, including upvotes/downvotes
+    // This prepare statment does a lot of things:
+    // It will fetch all comment data, including comment reactions (upvotes/downvotes)
+    // It ties which user posted each comment and the comments existing reactions
+    // It then organizes the comments by newest firsg
     const comments = db.prepare(`
       SELECT comments.id, comments.text, comments.created_at, users.display_name, 
-      users.profile_data, SUM(upvote) as upvote, SUM(downvote) as downvote
+      users.profile_data, SUM(upvote) AS upvote, SUM(downvote) AS downvote
       FROM comments JOIN users ON comments.user_id = users.id 
       LEFT JOIN reactions ON comments.id = reactions.comment_id
       GROUP BY comments.id ORDER BY comments.created_at DESC LIMIT ? OFFSET ?
