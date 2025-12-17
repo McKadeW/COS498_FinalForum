@@ -5,6 +5,7 @@
 function validateProfileColor(color) {
   const errors = [];
 
+  // Ensure proper function params
   if (!color) {
     errors.push('Hex color is required');
     return { valid: false, errors };
@@ -19,6 +20,7 @@ function validateProfileColor(color) {
     errors.push('Hex color must be in a valid format, such as #ff000');
   }
 
+  // Return errors (if any)
   return {
     valid: errors.length === 0,
     errors: errors

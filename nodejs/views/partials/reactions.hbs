@@ -1,0 +1,16 @@
+<!-- The partial for comment reactions -->
+<!-- This includes an upvote/downvote system -->
+<div class="comment-reactions">
+  <form method="POST" action="/comment/reactions">
+    <input type="hidden" name="comment_id" value="{{id}}">
+
+    <button type="submit" name="upvote" value="1">
+      Upvote: {{upvote}}
+    </button>
+
+    <button type="submit" name="downvote" value="1">
+      Downvote: {{downvote}}
+    </button>
+  </form>
+</div>
+

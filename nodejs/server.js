@@ -1,6 +1,8 @@
 // This is the main server.js file for this project
-// It manages the interactions between routes
+// It manages the interactions between routes and
+// some socket.io interactions (live chat)
 
+// Imports
 const express = require('express');
 const hbs = require('hbs');
 const path = require('path');
@@ -10,10 +12,12 @@ const http = require('http');
 const db = require('./db');
 const { Server } = require('socket.io');
 
+// App setup
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3012;
 
+// Routing modules
 const authRouter = require('./routes/auth');
 const commentRouter = require('./routes/comments');
 const pageRouter = require('./routes/pages');
@@ -26,6 +30,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
 // Allow the /liveChat/send POST route handle broadcasts
 // Source: https://github.com/socketio/socket.io/discussions/4157
 app.set('io', io);
@@ -33,7 +38,6 @@ app.set('io', io);
 // Configure Handlebars
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
-
 // Register partials directory
 hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 

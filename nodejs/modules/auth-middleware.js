@@ -1,17 +1,7 @@
 // modules/auth-middleware.js
-const loginTracker = require('./login-tracker');
+// Contained content to lockout the user after repeated login attempts
 
-/*
- Middleware to check if user is authenticated
- Returns 401 if not authenticated
- */
-function requireAuth(req, res, next) {
-  if (req.session && req.session.userId) {
-    next();
-  } else {
-    res.status(401).json({ error: 'Authentication required' });
-  }
-}
+const loginTracker = require('./login-tracker');
 
 /**
  Middleware to check username+IP-based login lockout
@@ -49,7 +39,6 @@ function getClientIP(req) {
 }
 
 module.exports = {
-  requireAuth,
   checkLoginLockout,
   getClientIP
 };

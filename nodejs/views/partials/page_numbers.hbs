@@ -1,0 +1,32 @@
+<!-- This is the partial hbs for the page numbers/pagination component of the comments page -->
+
+{{#if comments.length}}
+	<div class="pagination-container">
+        
+		<!-- Display the current info about the page and # of comments -->
+        	<div class="pagination-info">
+            		<p>
+				<strong>Current Page:</strong> {{current_page}} 
+				<strong>Total Pages:</strong> {{total_pages}} 
+				<strong>Total Comments:</strong> {{total_comments}}
+			</p>
+        	</div>
+
+		<!-- Page number and "prev" & "next" controls to switch between pages -->
+        	<div class="pagination-controls">
+            		{{#if prev}}
+                		<a class="pagination-link" href="/comments?page={{prev_page}}">< Prev</a>
+            		{{/if}}
+
+            		{{#each page_button_data}}
+                		<a class="pagination-link" href="/comments?page={{number}}" {{#if selected}}active{{/if}}">
+                    			{{number}}
+                		</a>
+            		{{/each}}
+
+            		{{#if next}}
+                		<a class="pagination-link" href="/comments?page={{next_page}}">Next ></a>
+            		{{/if}}
+        	</div>
+    	</div>
+{{/if}}

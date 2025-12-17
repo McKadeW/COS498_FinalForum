@@ -1,5 +1,5 @@
 // This is the auth routes file, containing the routes for
-// login, logout, and register
+// login, logout, register, and forgot password
 
 const express = require('express');
 const db = require('../db');
@@ -143,6 +143,7 @@ router.post('/login', checkLoginLockout, async (req, res) => {
 });
 
 // Route that shows the form to reset the user password
+// NOTE: CURRENTLY UNAVAILABLE DUE TO COMPATIBILITY ISSUES
 /*router.get('/login/forgotPassword', (req, res) => {
   return res.render('forgot_password', {
     error: req.query.error

@@ -1,4 +1,7 @@
 // modules/login-tracker.js
+// A module that helps track user login attempts to manage account lockout
+// It sets the # of attempts given to the user and amount of time to be locked out as well
+
 const db = require('../db');
 
 // Configuration

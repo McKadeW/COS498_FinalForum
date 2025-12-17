@@ -11,6 +11,12 @@
 	<!-- Main section that will display the list of posted comments (if any) -->
 	<main class="content">
 		<h2>Posted Comments</h2>
+		<p>Post comments to share with others!</p>
+
+		<!-- If there is an issue displaying comments/reactions -->
+		{{#if error}}
+                        <p class="error-message">{{error}}</p>
+                {{/if}}		
 
 		<!-- If there are comments, display them -->
 		{{#if comments.length}}
@@ -22,6 +28,7 @@
 						<p><strong style="color: {{profile_data}}">{{display_name}}</strong></p>
 						<p><span class="timestamp">{{created_at}}</span></p>
 						<p class="comment-text">{{text}}</p>
+						{{> reactions}}
 					</li>
 				{{/each}}
 			</ul>
@@ -29,6 +36,7 @@
 			<br>
 			<p>No Comments Yet! Be the first to make a post!</p>
 		{{/if}}
+		{{> page_numbers}}
 	</main>
 
 	{{> footer}}

@@ -1,4 +1,6 @@
 // This is the routes file containing page routes like home and profile pages
+// The profile page has multiple routes to display its page and let the user
+// change their account password, email, display name, and customize their display name color
 
 const express = require('express');
 const db = require('../db');

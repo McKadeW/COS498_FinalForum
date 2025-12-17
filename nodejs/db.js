@@ -13,9 +13,11 @@ db.pragma('foreign_keys = ON');
 // Create tables if they don't exist
 // Table 1: Holds the user's account and profile info
 // Table 2: Holds the user's session information
-// Table 3: Holds the comments ties to each user
+// Table 3: Holds the comments with ties to each user
 // Table 4: Tracks login attempts based on IP and username
 // Table 5: Holds the live chat history, similar to comments
+// Table 6: Holds all of the comment reactions (i.e. upvotes/downvotes)
+// and allows the user one upvote/downvote per comment 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,6 +63,18 @@ db.exec(`
     text TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS reactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    comment_id INTEGER NOT NULL,
+    upvote INTEGER NOT NULL DEFAULT 0,
+    downvote INTEGER NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, comment_id),
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(comment_id) REFERENCES comments(id)
   );
 `);
 

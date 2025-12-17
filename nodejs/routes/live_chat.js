@@ -1,4 +1,6 @@
 // The routes related to the live chat using socket.io
+// These routes display the live chat page and load the chat history
+// It also has a send route that handles broadcasting user messages to the chat
 
 const express = require('express');
 const db = require('../db');

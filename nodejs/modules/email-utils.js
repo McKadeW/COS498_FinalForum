@@ -6,6 +6,7 @@ validateEmail checks if an email address follows valid format
 function validateEmail(email) {
   const errors = [];
   
+  // Ensure the function was called with proper params
   if (!email) {
     errors.push('Email is required');
     return { valid: false, errors };
@@ -20,6 +21,7 @@ function validateEmail(email) {
     errors.push('Email must be in a valid format, such as user@example.com');
   }
   
+  // Return errors (if any)
   return {
     valid: errors.length === 0,
     errors: errors

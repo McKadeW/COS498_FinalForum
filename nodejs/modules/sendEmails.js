@@ -2,6 +2,8 @@
 // This file serves as the module to send emails to users
 // One use of this would be to allow them to reset a forgotton password
 
+// NOTE: NOT IN USE CURRENTLY DUE TO COMBATIBILITY ISSUES
+
 const nodemailer = require('nodemailer');
 
 // Create a transporter object using Gmail SMTP

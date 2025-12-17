@@ -1,4 +1,6 @@
 // sqlite-session-store.js
+// Handles the user's session management and its storage within the database
+
 const { Store } = require('express-session');
 const Database = require('better-sqlite3');
 const path = require('path');

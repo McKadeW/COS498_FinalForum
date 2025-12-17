@@ -1,4 +1,6 @@
 // modules/password-utils.js
+// Defines what passwords need to be in order to be considered valid
+
 const argon2 = require('argon2');
 
 // Argon2 configuration options
@@ -17,31 +19,38 @@ it passes some standard requirements (like length, an uppercase, etc)
 function validatePassword(password) {
   const errors = [];
   
+  // Ensure all params are passed into the function
   if (!password) {
     errors.push('Password is required');
     return { valid: false, errors };
   }
   
+  // The password must be at least 8 characters
   if (password.length < 8) {
     errors.push('Password must be at least 8 characters long');
   }
   
+  // Must have uppercase letter	
   if (!/[A-Z]/.test(password)) {
     errors.push('Password must contain at least one uppercase letter');
   }
   
+  // Must have lowercase letter
   if (!/[a-z]/.test(password)) {
     errors.push('Password must contain at least one lowercase letter');
   }
   
+  // Must have number
   if (!/[0-9]/.test(password)) {
     errors.push('Password must contain at least one number');
   }
   
+  // Must have special character
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
     errors.push('Password must contain at least one special character');
   }
   
+  // Return errors (if any)
   return {
     valid: errors.length === 0,
     errors: errors
@@ -52,7 +61,6 @@ function validatePassword(password) {
 async function hashPassword(password) {
   return await argon2.hash(password, ARGON2_OPTIONS);
 }
-
 
 // Compares a plain text password with a hashed password
 
