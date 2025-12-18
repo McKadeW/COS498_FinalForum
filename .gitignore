@@ -63,6 +63,13 @@ web_modules/
 # Output of 'npm pack'
 *.tgz
 
+# Generated database files
+nodejs/database/
+app.db
+*.db-journal
+*.db-wal
+*.db-shm
+
 # Yarn Integrity file
 .yarn-integrity
 

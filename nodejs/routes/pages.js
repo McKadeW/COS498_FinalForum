@@ -14,9 +14,9 @@ const router = express.Router();
 router.get('/', (req, res) => {
   // If the user is logged in display their name,
   // otherwise display Guest
-  let user = "Guest";
+  let name = "Guest";
   if (req.session && req.session.isLoggedIn) {
-        user = req.session.username;
+        name = req.session.display_name;
   }
 
   // Render the hompage with specific data if logged in
@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
         title: 'Home',
         message: 'Welcome to the Homepage!',
         loggedIn: req.session.isLoggedIn,
-        user: user
+        user: name
   });
 });
 

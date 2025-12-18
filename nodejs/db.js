@@ -4,7 +4,9 @@ const Database = require('better-sqlite3');
 const path = require('path');
 
 // Connect to database file
-const dbPath = path.join(__dirname, 'app.db');
+// Put the app.db in a database folder
+// This folder will be connected to the container in a volume for persistence
+const dbPath = path.join(__dirname, 'database', 'app.db');
 const db = new Database(dbPath);
 
 // Enable foreign keys

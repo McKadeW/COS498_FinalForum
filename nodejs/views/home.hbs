@@ -12,12 +12,14 @@
 		<!-- Shows content related to the assignment and its features -->
   		<main class="home-container">
     			<section class="intro">
-      				<h2>Welcome {{user}} to the Wild West Forum!</h2><br>
+      				<h2>Welcome {{user}} to the Less Wild West Forum!</h2><br>
       				<p>
-        			The <strong>Wild West Forum</strong> is a lightweight web application created for 
-        			<em>COS498: Server-Side Web Development</em>. This project demonstrates 
-        			the use of Node.js, Express, Handlebars, and Docker to build a small 
-        			but functional forum system where users can register, log in, and post comments.
+        			The <strong>Less Wild West Forum</strong> is a robust web application evolved
+				from the "Wild West Forum" midterm for <em>COS498: Server-Side Web Development</em>. 
+				This project demonstrates the transformation of a basic site into a secure, persistent,
+				real-time platform. It's built using Node.js, Express, Handlebars, SQlite3, and Docker to build a 
+        			functional forum system where users can register, log in, and post comments. It now features
+				additional security integrations, features, and database operations.
       				</p>
     			</section>
 
@@ -27,7 +29,14 @@
         				<li>User registration and login system (with basic session handling)</li>
         				<li>View and add comments on the forum</li>
         				<li>Dynamic pages rendered with Handlebars templates</li>
-        				<li>Dockerized setup for Node.js and Nginx</li>
+        				<li>Dockerized setup for Node.js and Nginx Proxy Manager</li>
+					<li>User accounts protected by Argon2 hashing</li>
+					<li>An account lockout system after so many login attempts</li>
+					<li>Persistent SQlite3 database storage</li>
+					<li>A Socket.io live chat</li>
+					<li>Comment pagination with user-specific display names, and a upvote/downvote reaction system</li>
+					<li>Profile management to change user password, email, display name, and display name color</li>
+					<li>Account recovery through user generated question/answer</li>
       				</ul>
     			</section>
 
@@ -37,7 +46,9 @@
         			This project runs on a <strong>Node.js</strong> backend using the 
         			<strong>Express.js</strong> framework for routing and <strong>Handlebars</strong> 
         			for server-side templating. The application is deployed inside Docker containers, 
-        			with <strong>Nginx</strong> acting as a reverse proxy.
+        			with <strong>Nginx Proxy Manager</strong> as a reverse proxy, providing HTTPS encryption.
+				<strong>Socket.io</strong> is used for live chat message broadcasting and <strong>SQlite3</strong>
+				is used to store app-wide data using s series of database tables.
       				</p>
       				<img src="/images/nodejs.jpg" alt="System architecture diagram" class="home-img">
     			</section>
@@ -45,9 +56,9 @@
     			<section class="about">
       				<h3>About the Assignment</h3>
       				<p>
-        			This project is intentionally designed with simplified security and in-memory data 
-        			storage for educational purposes. It demonstrates fundamental concepts of 
-        			session management, routing, and templating in a controlled, sandboxed environment.
+        			This project implements production-ready security, including HTTPS-only traffic, validated input sanitization, 
+				and account recovery. It represents a transition from "educational sandbox" seen in the "Wild West" midterm forum
+				to a a more complete, full-stack web application.
       				</p>
     			</section>
   		</main>
